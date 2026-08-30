@@ -1,0 +1,357 @@
+<title>אביאל ופרח</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;700;900&family=Heebo:wght@300;400;700&family=Dancing+Script:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:              #f9ede7;
+  --bg2:             #f2e0d5;
+  --card:            #fdf8f5;
+  --card-b:          rgba(184,134,42,0.22);
+  --card-inner-b:    rgba(184,134,42,0.12);
+  --gold:            #b8862a;
+  --gold-l:          #d4a84a;
+  --gold-xl:         #e8c870;
+  --rose:            #c08070;
+  --rose-l:          #e0b0a0;
+  --rose-d:          #7a3830;
+  --script-c:        #8a4840;
+  --text:            #3a1e18;
+  --text-s:          #7a4a40;
+  --text-m:          #b07860;
+  --input-bg:        rgba(253,248,245,0.9);
+  --input-b:         rgba(184,134,42,0.2);
+  --shadow:          rgba(90,40,30,0.14);
+  --shadow-l:        rgba(90,40,30,0.06);
+  --strip-bg:        #7a3830;
+  --attend-yes-c:    #2a6030;
+  --attend-yes-bg:   rgba(60,120,70,0.1);
+  --attend-yes-b:    #4a8a50;
+  --attend-no-c:     #803838;
+  --attend-no-bg:    rgba(160,70,60,0.1);
+  --attend-no-b:     #b06060;
+  --footer-bg:       #7a3830;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#18100c;--bg2:#20140e;--card:#2e1a12;
+    --card-b:rgba(184,134,42,0.18);--card-inner-b:rgba(184,134,42,0.09);
+    --script-c:#c09888;--rose-d:#c09888;
+    --text:#f0e0d5;--text-s:#c0907a;--text-m:#906050;
+    --input-bg:rgba(46,26,18,0.85);--input-b:rgba(184,134,42,0.22);
+    --shadow:rgba(0,0,0,0.45);--shadow-l:rgba(0,0,0,0.22);
+    --attend-yes-c:#80c888;--attend-yes-bg:rgba(60,120,70,0.15);
+    --attend-no-c:#d09898;--attend-no-bg:rgba(160,70,60,0.15);
+    --strip-bg:#120b08;--footer-bg:#120b08;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#18100c;--bg2:#20140e;--card:#2e1a12;
+  --card-b:rgba(184,134,42,0.18);--card-inner-b:rgba(184,134,42,0.09);
+  --script-c:#c09888;--rose-d:#c09888;
+  --text:#f0e0d5;--text-s:#c0907a;--text-m:#906050;
+  --input-bg:rgba(46,26,18,0.85);--input-b:rgba(184,134,42,0.22);
+  --shadow:rgba(0,0,0,0.45);--shadow-l:rgba(0,0,0,0.22);
+  --attend-yes-c:#80c888;--attend-yes-bg:rgba(60,120,70,0.15);
+  --attend-no-c:#d09898;--attend-no-bg:rgba(160,70,60,0.15);
+  --strip-bg:#120b08;--footer-bg:#120b08;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;transition:background 0.3s,color 0.3s;}
+
+.theme-toggle{position:fixed;top:1.1rem;left:1.1rem;z-index:100;background:var(--card);border:1px solid var(--card-b);color:var(--text-m);width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;box-shadow:0 2px 14px var(--shadow);transition:transform 0.2s,box-shadow 0.2s,background 0.3s;}
+.theme-toggle:hover{transform:scale(1.1);box-shadow:0 4px 22px var(--shadow);}
+
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:3rem 1.2rem;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 18% 18%,rgba(240,192,175,0.45) 0%,transparent 42%),radial-gradient(ellipse at 82% 78%,rgba(224,168,152,0.38) 0%,transparent 46%),radial-gradient(ellipse at 52% 52%,rgba(249,237,231,0.25) 0%,transparent 72%);pointer-events:none;}
+.rose-tl{position:absolute;top:-8px;right:-8px;width:min(230px,38vw);pointer-events:none;z-index:0;}
+.rose-br{position:absolute;bottom:-8px;left:-8px;width:min(200px,34vw);pointer-events:none;z-index:0;transform:rotate(180deg);}
+
+.invite-card{position:relative;z-index:1;background:var(--card);border:1px solid var(--card-b);border-radius:3px;width:min(420px,94vw);padding:3rem 2.5rem 2.5rem;text-align:center;box-shadow:0 24px 70px var(--shadow),0 6px 24px var(--shadow-l),inset 0 0 80px rgba(184,134,42,0.03);transition:background 0.3s,box-shadow 0.3s;}
+.invite-card::before{content:'';position:absolute;inset:8px;border:1px solid var(--card-inner-b);border-radius:1px;pointer-events:none;transition:border-color 0.3s;}
+
+.name-display{font-family:'Frank Ruhl Libre',serif;font-size:clamp(3.8rem,17vw,5.8rem);font-weight:900;line-height:0.92;letter-spacing:-0.02em;background:linear-gradient(130deg,#6a3f0e 0%,#c09030 16%,#e8c858 28%,#f4da78 38%,#e0b840 48%,#c09030 58%,#8a5520 70%,#c09030 80%,#e8c858 90%,#9e6420 100%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:goldShimmer 5s linear infinite;display:block;}
+@keyframes goldShimmer{0%{background-position:0% center}100%{background-position:200% center}}
+.amp{font-family:'Dancing Script',cursive;font-size:clamp(2.4rem,9vw,3.2rem);color:var(--rose-l);line-height:1.05;display:block;margin:0.05rem 0;-webkit-text-fill-color:var(--rose-l);}
+.script-line{font-family:'Dancing Script',cursive;font-size:clamp(1.35rem,4.5vw,1.75rem);color:var(--script-c);margin:1.4rem 0 0.6rem;letter-spacing:0.02em;transition:color 0.3s;}
+.heart-div{color:var(--gold-l);font-size:0.95rem;opacity:0.75;margin:0.35rem 0;}
+.gold-rule{width:70px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-l),transparent);margin:0.9rem auto;opacity:0.55;}
+.date-he{font-size:clamp(0.88rem,2.8vw,1rem);color:var(--text);font-weight:300;margin:0.85rem 0 0.3rem;letter-spacing:0.03em;transition:color 0.3s;}
+.date-en{font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.05rem,3.5vw,1.3rem);font-weight:400;color:var(--text);direction:ltr;letter-spacing:0.09em;margin-bottom:0.2rem;transition:color 0.3s;}
+.venue-line{font-size:clamp(0.82rem,2.6vw,0.97rem);font-weight:700;color:var(--text);letter-spacing:0.07em;transition:color 0.3s;}
+.scroll-cta{margin-top:1.6rem;font-size:0.68rem;letter-spacing:0.26em;color:var(--text-m);text-transform:uppercase;animation:nudge 2.6s ease-in-out infinite;transition:color 0.3s;}
+@keyframes nudge{0%,100%{opacity:0.35;transform:translateY(0)}50%{opacity:0.72;transform:translateY(4px)}}
+
+.info-strip{background:var(--strip-bg);display:flex;justify-content:center;flex-wrap:wrap;transition:background 0.3s;}
+.info-item{display:flex;flex-direction:column;align-items:center;padding:1rem 1.8rem;border-left:1px solid rgba(255,255,255,0.08);min-width:130px;}
+.info-item:last-child{border-left:none;}
+.info-lbl{font-size:0.58rem;letter-spacing:0.24em;color:rgba(240,214,196,0.5);text-transform:uppercase;margin-bottom:0.3rem;}
+.info-val{font-family:'Frank Ruhl Libre',serif;font-size:1.15rem;color:#e4caa0;font-style:italic;}
+
+.rsvp-section{background:var(--bg2);padding:4.5rem 1.5rem 5rem;transition:background 0.3s;}
+.section-inner{max-width:560px;margin:0 auto;text-align:center;}
+.section-title{font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.9rem,6vw,2.4rem);font-weight:300;color:var(--text);margin-bottom:0.3rem;transition:color 0.3s;}
+.section-sub{font-size:0.7rem;letter-spacing:0.22em;color:var(--text-m);text-transform:uppercase;margin-bottom:1.8rem;transition:color 0.3s;}
+.gold-rule-c{width:55px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 2rem;opacity:0.5;}
+
+.rsvp-card{background:var(--card);border:1px solid var(--card-b);border-radius:5px;padding:2rem;box-shadow:0 4px 32px var(--shadow-l);text-align:right;transition:background 0.3s,border-color 0.3s;}
+.form-label{display:block;font-size:0.72rem;letter-spacing:0.12em;color:var(--text-s);text-transform:uppercase;margin-bottom:0.5rem;margin-top:1.3rem;transition:color 0.3s;}
+.form-label:first-of-type{margin-top:0;}
+.form-input{width:100%;padding:0.88rem 1rem;background:var(--input-bg);border:1.5px solid var(--input-b);color:var(--text);font-family:'Heebo',sans-serif;font-size:1rem;border-radius:4px;outline:none;direction:rtl;transition:border-color 0.2s,box-shadow 0.2s,background 0.3s,color 0.3s;}
+.form-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,134,42,0.11);}
+
+.attend-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:0.3rem;}
+.attend-btn{padding:0.88rem 0.8rem;background:var(--input-bg);border:1.5px solid var(--input-b);color:var(--text-s);font-family:'Heebo',sans-serif;font-size:0.88rem;font-weight:700;border-radius:4px;cursor:pointer;transition:all 0.2s;}
+.attend-btn:hover{border-color:var(--gold);color:var(--text);}
+.attend-btn.active-yes{background:var(--attend-yes-bg);border-color:var(--attend-yes-b);color:var(--attend-yes-c);}
+.attend-btn.active-no{background:var(--attend-no-bg);border-color:var(--attend-no-b);color:var(--attend-no-c);}
+
+.counter-wrap{display:flex;align-items:center;justify-content:space-between;gap:0.8rem;background:var(--input-bg);border:1.5px solid var(--input-b);border-radius:4px;padding:0.78rem 1rem;transition:background 0.3s,border-color 0.3s;}
+.counter-lbl{font-size:0.9rem;color:var(--text-s);flex:1;transition:color 0.3s;}
+.counter-controls{display:flex;align-items:center;gap:0.7rem;}
+.c-btn{width:34px;height:34px;background:var(--card);border:1.5px solid var(--card-b);color:var(--gold);font-size:1.15rem;font-weight:700;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;line-height:1;}
+.c-btn:hover{background:var(--gold);color:white;border-color:var(--gold);}
+.c-num{font-family:'Frank Ruhl Libre',serif;font-size:1.55rem;font-weight:700;color:var(--gold);min-width:1.8ch;text-align:center;}
+
+.submit-btn{width:100%;margin-top:1.6rem;padding:1rem;background:var(--rose-d);color:white;border:none;border-radius:4px;font-family:'Heebo',sans-serif;font-size:0.97rem;font-weight:700;letter-spacing:0.09em;cursor:pointer;transition:all 0.25s;}
+.submit-btn:hover{background:var(--gold);transform:translateY(-2px);box-shadow:0 8px 26px rgba(184,134,42,0.28);}
+
+.success-box{display:none;text-align:center;padding:2.5rem 1rem;animation:fadeUp 0.5s ease;}
+.success-box.show{display:block;}
+.success-icon{font-size:3rem;margin-bottom:1rem;}
+.success-box h3{font-family:'Frank Ruhl Libre',serif;font-size:1.9rem;font-weight:400;color:var(--text);margin-bottom:0.5rem;transition:color 0.3s;}
+.success-box p{color:var(--text-s);line-height:1.7;transition:color 0.3s;}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(20,8,5,0.62);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);z-index:200;align-items:center;justify-content:center;padding:1.5rem;}
+.modal-overlay.show{display:flex;}
+.modal-card{background:var(--card);border:1px solid var(--card-b);border-radius:7px;padding:2.5rem 2rem;width:min(440px,95vw);text-align:center;box-shadow:0 24px 70px var(--shadow);animation:fadeUp 0.35s ease;transition:background 0.3s;}
+.modal-icon{font-size:2.6rem;margin-bottom:0.8rem;}
+.modal-title{font-family:'Frank Ruhl Libre',serif;font-size:1.65rem;font-weight:400;color:var(--text);margin-bottom:0.55rem;transition:color 0.3s;}
+.modal-body{font-size:0.94rem;color:var(--text-s);line-height:1.7;margin-bottom:1.8rem;transition:color 0.3s;}
+.modal-btns{display:flex;flex-direction:column;gap:0.75rem;}
+.modal-btn-gift{padding:0.92rem;background:var(--gold);color:white;border:none;border-radius:4px;font-family:'Heebo',sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.modal-btn-gift:hover{background:#9e7020;transform:translateY(-1px);}
+.modal-btn-skip{padding:0.78rem;background:transparent;color:var(--text-m);border:1px solid var(--card-b);border-radius:4px;font-family:'Heebo',sans-serif;font-size:0.87rem;cursor:pointer;transition:all 0.2s;}
+.modal-btn-skip:hover{color:var(--text-s);border-color:var(--input-b);}
+.modal-btn-bless{padding:0.92rem;background:var(--rose-d);color:white;border:none;border-radius:4px;font-family:'Heebo',sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.modal-btn-bless:hover{background:var(--gold);transform:translateY(-1px);}
+.modal-btn-bless:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+.modal-divider{display:flex;align-items:center;gap:0.8rem;margin:1.2rem 0;color:var(--text-m);font-size:0.72rem;letter-spacing:0.14em;}
+.modal-divider::before,.modal-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--card-b),transparent);}
+.blessing-textarea{width:100%;min-height:100px;padding:0.85rem 1rem;background:var(--input-bg);border:1.5px solid var(--input-b);color:var(--text);font-family:'Heebo',sans-serif;font-size:0.95rem;line-height:1.6;border-radius:4px;resize:vertical;outline:none;direction:rtl;transition:border-color 0.2s,box-shadow 0.2s,background 0.3s,color 0.3s;}
+.blessing-textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,134,42,0.11);}
+.blessing-textarea::placeholder{color:var(--text-m);opacity:0.7;}
+.blessing-sent{display:none;background:rgba(60,120,70,0.1);border:1px solid rgba(60,120,70,0.25);border-radius:4px;padding:0.9rem;color:var(--attend-yes-c);font-size:0.9rem;margin-top:0.5rem;animation:fadeUp 0.3s ease;}
+.blessing-sent.show{display:block;}
+
+footer{background:var(--footer-bg);color:rgba(232,210,190,0.45);text-align:center;padding:2.2rem 1.5rem;font-size:0.76rem;letter-spacing:0.11em;transition:background 0.3s;}
+.footer-names{font-family:'Frank Ruhl Libre',serif;font-style:italic;font-size:1.12rem;color:#e4caa0;display:block;margin-bottom:0.45rem;}
+.github-link{display:inline-flex;align-items:center;gap:0.45rem;margin-top:1.1rem;color:rgba(228,202,160,0.32);font-size:0.63rem;letter-spacing:0.14em;text-decoration:none;transition:color 0.2s;}
+.github-link:hover{color:rgba(228,202,160,0.72);}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity 0.65s ease,transform 0.65s ease;}
+.reveal.in{opacity:1;transform:none;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media(max-width:480px){.invite-card{padding:2.2rem 1.4rem 2rem;}.attend-grid{grid-template-columns:1fr;}.info-item{padding:0.85rem 1.1rem;min-width:100px;}.rsvp-card{padding:1.5rem;}}
+@media(prefers-reduced-motion:reduce){.name-display{animation:none;}.scroll-cta{animation:none;opacity:0.5;}.reveal{transition:none;}}
+</style>
+
+<button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="החלף מצב תצוגה"><span id="theme-icon">🌙</span></button>
+
+<section class="hero" dir="rtl">
+  <div class="hero-bg"></div>
+  <svg class="rose-tl" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="48" cy="140" rx="9" ry="24" fill="#8ab87a" opacity="0.52" transform="rotate(-28 48 140)"/>
+    <ellipse cx="68" cy="158" rx="7" ry="18" fill="#70a862" opacity="0.42" transform="rotate(18 68 158)"/>
+    <ellipse cx="162" cy="26" rx="8" ry="20" fill="#8ab87a" opacity="0.48" transform="rotate(55 162 26)"/>
+    <ellipse cx="178" cy="96" rx="6" ry="16" fill="#70a862" opacity="0.4" transform="rotate(22 178 96)"/>
+    <g transform="translate(95,82)">
+      <ellipse cx="0" cy="-29" rx="16" ry="29" fill="#f0c8c0" opacity="0.9"/>
+      <ellipse cx="0" cy="-29" rx="16" ry="29" fill="#e6b4ac" opacity="0.85" transform="rotate(45)"/>
+      <ellipse cx="0" cy="-29" rx="16" ry="29" fill="#f5cec6" opacity="0.88" transform="rotate(90)"/>
+      <ellipse cx="0" cy="-29" rx="16" ry="29" fill="#e6b4ac" opacity="0.85" transform="rotate(135)"/>
+      <ellipse cx="0" cy="-29" rx="16" ry="29" fill="#f0c8c0" opacity="0.9" transform="rotate(180)"/>
+      <ellipse cx="0" cy="-29" rx="16" ry="29" fill="#e6b4ac" opacity="0.85" transform="rotate(225)"/>
+      <ellipse cx="0" cy="-29" rx="16" ry="29" fill="#f5cec6" opacity="0.88" transform="rotate(270)"/>
+      <ellipse cx="0" cy="-29" rx="16" ry="29" fill="#e6b4ac" opacity="0.85" transform="rotate(315)"/>
+      <ellipse cx="0" cy="-18" rx="11" ry="20" fill="#fad5cc" transform="rotate(22.5)"/>
+      <ellipse cx="0" cy="-18" rx="11" ry="20" fill="#f0c5bc" transform="rotate(67.5)"/>
+      <ellipse cx="0" cy="-18" rx="11" ry="20" fill="#fad5cc" transform="rotate(112.5)"/>
+      <ellipse cx="0" cy="-18" rx="11" ry="20" fill="#f0c5bc" transform="rotate(157.5)"/>
+      <ellipse cx="0" cy="-18" rx="11" ry="20" fill="#fad5cc" transform="rotate(202.5)"/>
+      <ellipse cx="0" cy="-18" rx="11" ry="20" fill="#f0c5bc" transform="rotate(247.5)"/>
+      <circle r="14" fill="#d2a090"/><circle r="8" fill="#c29080"/><circle r="4" fill="#a87060"/>
+    </g>
+    <g transform="translate(152,138)" opacity="0.84">
+      <ellipse cx="0" cy="-20" rx="11" ry="20" fill="#fad5cc"/>
+      <ellipse cx="0" cy="-20" rx="11" ry="20" fill="#f0c0b8" transform="rotate(60)"/>
+      <ellipse cx="0" cy="-20" rx="11" ry="20" fill="#fad5cc" transform="rotate(120)"/>
+      <ellipse cx="0" cy="-20" rx="11" ry="20" fill="#f0c0b8" transform="rotate(180)"/>
+      <ellipse cx="0" cy="-20" rx="11" ry="20" fill="#fad5cc" transform="rotate(240)"/>
+      <ellipse cx="0" cy="-20" rx="11" ry="20" fill="#f0c0b8" transform="rotate(300)"/>
+      <circle r="9" fill="#d0a890"/><circle r="5" fill="#b89080"/>
+    </g>
+    <g transform="translate(162,56)" opacity="0.88">
+      <ellipse cx="0" cy="-17" rx="9" ry="17" fill="#fff8f4"/>
+      <ellipse cx="0" cy="-17" rx="9" ry="17" fill="#f5ece8" transform="rotate(45)"/>
+      <ellipse cx="0" cy="-17" rx="9" ry="17" fill="#fff8f4" transform="rotate(90)"/>
+      <ellipse cx="0" cy="-17" rx="9" ry="17" fill="#f5ece8" transform="rotate(135)"/>
+      <ellipse cx="0" cy="-17" rx="9" ry="17" fill="#fff8f4" transform="rotate(180)"/>
+      <ellipse cx="0" cy="-17" rx="9" ry="17" fill="#f5ece8" transform="rotate(225)"/>
+      <ellipse cx="0" cy="-17" rx="9" ry="17" fill="#fff8f4" transform="rotate(270)"/>
+      <ellipse cx="0" cy="-17" rx="9" ry="17" fill="#f5ece8" transform="rotate(315)"/>
+      <circle r="7" fill="#ead5cf"/><circle r="4" fill="#d0b8b0"/>
+    </g>
+  </svg>
+  <svg class="rose-br" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="155" cy="58" rx="8" ry="22" fill="#8ab87a" opacity="0.5" transform="rotate(-42 155 58)"/>
+    <ellipse cx="140" cy="40" rx="6" ry="15" fill="#70a862" opacity="0.4" transform="rotate(22 140 40)"/>
+    <ellipse cx="30" cy="128" rx="7" ry="18" fill="#8ab87a" opacity="0.44" transform="rotate(32 30 128)"/>
+    <g transform="translate(108,115)">
+      <ellipse cx="0" cy="-26" rx="14" ry="26" fill="#f5cec6" opacity="0.9"/>
+      <ellipse cx="0" cy="-26" rx="14" ry="26" fill="#e6b4ac" opacity="0.85" transform="rotate(45)"/>
+      <ellipse cx="0" cy="-26" rx="14" ry="26" fill="#f0c8c0" opacity="0.9" transform="rotate(90)"/>
+      <ellipse cx="0" cy="-26" rx="14" ry="26" fill="#e6b4ac" opacity="0.85" transform="rotate(135)"/>
+      <ellipse cx="0" cy="-26" rx="14" ry="26" fill="#f5cec6" opacity="0.9" transform="rotate(180)"/>
+      <ellipse cx="0" cy="-26" rx="14" ry="26" fill="#e6b4ac" opacity="0.85" transform="rotate(225)"/>
+      <ellipse cx="0" cy="-26" rx="14" ry="26" fill="#f0c8c0" opacity="0.9" transform="rotate(270)"/>
+      <ellipse cx="0" cy="-26" rx="14" ry="26" fill="#e6b4ac" opacity="0.85" transform="rotate(315)"/>
+      <ellipse cx="0" cy="-16" rx="10" ry="18" fill="#fad5cc" transform="rotate(22.5)"/>
+      <ellipse cx="0" cy="-16" rx="10" ry="18" fill="#f0c5bc" transform="rotate(67.5)"/>
+      <ellipse cx="0" cy="-16" rx="10" ry="18" fill="#fad5cc" transform="rotate(112.5)"/>
+      <ellipse cx="0" cy="-16" rx="10" ry="18" fill="#f0c5bc" transform="rotate(157.5)"/>
+      <circle r="12" fill="#d2a090"/><circle r="7" fill="#c29080"/><circle r="4" fill="#a87060"/>
+    </g>
+    <g transform="translate(52,68)" opacity="0.78">
+      <ellipse cx="0" cy="-18" rx="10" ry="18" fill="#fad5cc"/>
+      <ellipse cx="0" cy="-18" rx="10" ry="18" fill="#f0c0b8" transform="rotate(60)"/>
+      <ellipse cx="0" cy="-18" rx="10" ry="18" fill="#fad5cc" transform="rotate(120)"/>
+      <ellipse cx="0" cy="-18" rx="10" ry="18" fill="#f0c0b8" transform="rotate(180)"/>
+      <ellipse cx="0" cy="-18" rx="10" ry="18" fill="#fad5cc" transform="rotate(240)"/>
+      <ellipse cx="0" cy="-18" rx="10" ry="18" fill="#f0c0b8" transform="rotate(300)"/>
+      <circle r="8" fill="#d0a890"/><circle r="4" fill="#b89080"/>
+    </g>
+  </svg>
+
+  <div class="invite-card">
+    <span class="name-display">אביאל</span>
+    <span class="amp">&amp;</span>
+    <span class="name-display">פרח</span>
+    <div class="script-line">save the date</div>
+    <div class="heart-div">♥</div>
+    <div class="date-he">יום רביעי, ט"ז בתשרי תשפ"ז</div>
+    <div class="date-en">16.9.2026</div>
+    <div class="gold-rule"></div>
+    <div class="venue-line">באולמי אגמים, אשקלון</div>
+    <div class="heart-div">♥</div>
+    <div class="scroll-cta">אשר הגעה ↓</div>
+  </div>
+</section>
+
+<div class="info-strip" dir="rtl">
+  <div class="info-item"><span class="info-lbl">תאריך</span><span class="info-val">16.9.2026</span></div>
+  <div class="info-item"><span class="info-lbl">יום</span><span class="info-val">רביעי</span></div>
+  <div class="info-item"><span class="info-lbl">בתשרי תשפ"ז</span><span class="info-val">ט"ז</span></div>
+  <div class="info-item"><span class="info-lbl">אולם</span><span class="info-val">אגמים, אשקלון</span></div>
+</div>
+
+<section class="rsvp-section" id="rsvp" dir="rtl">
+  <div class="section-inner">
+    <h2 class="section-title reveal">אישור הגעה</h2>
+    <p class="section-sub reveal">נשמח לדעת האם תגיעו לשמחה שלנו</p>
+    <div class="gold-rule-c reveal"></div>
+    <div class="rsvp-card reveal" id="form-card">
+      <label class="form-label">האם תגיע/י?</label>
+      <div class="attend-grid">
+        <button class="attend-btn" onclick="setAttend('yes',this)">✓ &nbsp;כן, אגיע בשמחה!</button>
+        <button class="attend-btn" onclick="setAttend('no',this)">✗ &nbsp;לא אוכל להגיע</button>
+      </div>
+      <label class="form-label">שם מלא *</label>
+      <input class="form-input" type="text" id="f-name" placeholder="ישראל ישראלי" autocomplete="name"/>
+      <label class="form-label">טלפון</label>
+      <input class="form-input" type="tel" id="f-phone" placeholder="050-0000000" autocomplete="tel"/>
+      <div id="guests-block" style="display:none">
+        <label class="form-label">כמה משתתפים מגיעים? (כולל עצמך)</label>
+        <div class="counter-wrap">
+          <span class="counter-lbl">מספר משתתפים</span>
+          <div class="counter-controls">
+            <button class="c-btn" onclick="chg(-1)" aria-label="הפחת">−</button>
+            <span class="c-num" id="cnt">1</span>
+            <button class="c-btn" onclick="chg(+1)" aria-label="הוסף">+</button>
+          </div>
+        </div>
+      </div>
+      <button class="submit-btn" onclick="doSubmit()">שלח אישור הגעה ✦</button>
+    </div>
+    <div class="success-box" id="success-box">
+      <div class="success-icon" id="s-icon">💌</div>
+      <h3 id="s-head">תודה רבה!</h3>
+      <p id="s-body">נתראה בשמחה!</p>
+    </div>
+  </div>
+</section>
+
+<div class="modal-overlay" id="gift-modal" dir="rtl" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-icon">💌</div>
+    <h3 class="modal-title">חבל שלא תוכל/י להגיע!</h3>
+    <p class="modal-body">אביאל ופרח ישמחו לשמוע ממך.<br>השאר/י להם ברכה חמה ו/או שלח/י מתנה 🌹</p>
+    <label style="display:block;text-align:right;font-size:0.72rem;letter-spacing:0.12em;color:var(--text-s);text-transform:uppercase;margin-bottom:0.5rem;">כתוב/י ברכה לזוג</label>
+    <textarea class="blessing-textarea" id="blessing-text" placeholder="ברכות חמות לאביאל ופרח היקרים..." maxlength="500"></textarea>
+    <div class="blessing-sent" id="blessing-sent">✓ &nbsp;הברכה נשלחה — תודה רבה! 🌸</div>
+    <div class="modal-divider">מתנה לזוג</div>
+    <a class="modal-btn-gift" href="https://www.bitpay.co.il/app/me/53F157CB-E403-6C48-D197-E9233F6204E233FD" target="_blank" rel="noopener noreferrer">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M11.5 2C6.81 2 3 5.81 3 10.5S6.81 19 11.5 19h.5v3c4.86-2.34 8-7 8-11.5C20 5.81 16.19 2 11.5 2zm1 14.5h-2v-2h2v2zm0-4h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2h-2c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5z"/></svg>
+      שלח/י מתנה דרך Bit
+    </a>
+    <div class="modal-btns">
+      <button class="modal-btn-bless" id="send-blessing-btn" onclick="sendBlessing()">שלח/י ברכה ✦</button>
+      <button class="modal-btn-skip" onclick="closeGiftModal()">סגור</button>
+    </div>
+  </div>
+</div>
+
+<footer dir="rtl">
+  <span class="footer-names">אביאל &amp; פרח</span>
+  ט"ז בתשרי תשפ"ז &nbsp;·&nbsp; 16.9.2026 &nbsp;·&nbsp; אולמי אגמים, אשקלון
+  <br>
+  <a class="github-link" href="https://github.com/Aviel-Amitay/wedding-project" target="_blank" rel="noopener noreferrer">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+    Aviel-Amitay/wedding-project
+  </a>
+</footer>
+
+<script>
+var attend=null,gcount=1;
+(function(){var s=localStorage.getItem('wedding-theme');if(s){document.documentElement.setAttribute('data-theme',s);document.getElementById('theme-icon').textContent=s==='dark'?'☀️':'🌙';}})();
+function toggleTheme(){var c=document.documentElement.getAttribute('data-theme'),n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);localStorage.setItem('wedding-theme',n);document.getElementById('theme-icon').textContent=n==='dark'?'☀️':'🌙';}
+function setAttend(v,btn){attend=v;document.querySelectorAll('.attend-btn').forEach(function(b){b.classList.remove('active-yes','active-no');});btn.classList.add('active-'+v);document.getElementById('guests-block').style.display=v==='yes'?'block':'none';}
+function chg(d){gcount=Math.max(1,Math.min(20,gcount+d));document.getElementById('cnt').textContent=gcount;}
+function doSubmit(){
+  var name=document.getElementById('f-name').value.trim();
+  var phone=document.getElementById('f-phone').value.trim();
+  if(!name){alert('אנא הזן/י שם מלא');return;}
+  if(!attend){alert('אנא בחר/י האם תגיע/י');return;}
+  document.getElementById('form-card').style.display='none';
+  var s=document.getElementById('success-box');s.classList.add('show');
+  if(attend==='yes'){document.getElementById('s-icon').textContent='🎉';document.getElementById('s-head').textContent='מעולה '+name+'!';document.getElementById('s-body').textContent='שמחנו לשמוע! נתראה ב-16.9.2026 באולמי אגמים 🌹';}
+  else{document.getElementById('s-icon').textContent='💌';document.getElementById('s-head').textContent='תודה '+name+' על ההודעה';document.getElementById('s-body').textContent='חבל שלא תוכל/י להגיע...';setTimeout(showGiftModal,1500);}
+}
+function showGiftModal(n){
+  document.getElementById('blessing-text').value='';
+  document.getElementById('blessing-sent').classList.remove('show');
+  var btn=document.getElementById('send-blessing-btn');
+  btn.textContent='שלח/י ברכה ✦';btn.disabled=false;btn.style.display='';
+  document.getElementById('gift-modal').classList.add('show');
+}
+function closeGiftModal(){document.getElementById('gift-modal').classList.remove('show');}
+function sendBlessing(){
+  var text=document.getElementById('blessing-text').value.trim();
+  if(!text){alert('אנא כתוב/י ברכה קצרה');return;}
+  var btn=document.getElementById('send-blessing-btn');
+  btn.textContent='נשלח!';btn.disabled=true;
+  document.getElementById('blessing-sent').classList.add('show');
+  btn.style.display='none';
+}
+document.getElementById('gift-modal').addEventListener('click',function(e){if(e.target===this)closeGiftModal();});
+(function(){var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('in');});},{threshold:0.12});document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});})();
+</script>

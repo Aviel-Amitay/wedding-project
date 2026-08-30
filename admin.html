@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>פאנל ניהול — אליעזר ויעל</title>
+<title>פאנל ניהול — אביאל ופרח</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Alef:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -501,7 +501,7 @@
 <div class="login-page" id="login-page">
   <div class="login-card">
     <div style="font-size:2rem;margin-bottom:1rem">✦</div>
-    <h1 class="login-title">אליעזר &amp; יעל</h1>
+    <h1 class="login-title">אביאל &amp; פרח</h1>
     <p class="login-sub">פאנל ניהול אורחים</p>
 
     <button class="google-btn" id="google-btn" onclick="signInWithGoogle()">
@@ -520,8 +520,8 @@
 
   <header class="admin-header">
     <div>
-      <div class="admin-header-title">אליעזר &amp; יעל — פאנל אורחים</div>
-      <div class="admin-header-sub">05.05.2026 &nbsp;·&nbsp; בית זלטה, כפר חב״ד &nbsp;·&nbsp; <span id="user-email" style="opacity:0.7"></span></div>
+      <div class="admin-header-title">אביאל &amp; פרח — פאנל אורחים</div>
+      <div class="admin-header-sub">16.9.2026 &nbsp;·&nbsp; אולמי אגמים, אשקלון &nbsp;·&nbsp; <span id="user-email" style="opacity:0.7"></span></div>
     </div>
     <button class="logout-btn" onclick="logout()">התנתק</button>
   </header>
@@ -597,29 +597,23 @@
   </div>
 </div>
 
+<!-- Sensitive config — values live in config.js (gitignored) -->
+<script src="config.js"></script>
+
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js"></script>
 <script>
-var firebaseConfig = {
-  apiKey: "************************",
-  authDomain: "eliezer-yael-wedding.firebaseapp.com",
-  projectId: "eliezer-yael-wedding",
-  storageBucket: "eliezer-yael-wedding.firebasestorage.app",
-  messagingSenderId: "980359740134",
-  appId: "1:980359740134:web:b9006d2d90fe71c9ce5927"
-};
-
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(APP_CONFIG.firebase);
 var db        = firebase.firestore();
 var auth      = firebase.auth();
 var messaging = firebase.messaging();
-var VAPID_KEY = "********************************"; // ← יש להחליף במפתח VAPID שלך לקבלת התראות דפדפן
-var provider = new firebase.auth.GoogleAuthProvider();
+var VAPID_KEY = APP_CONFIG.vapidKey;
+var provider  = new firebase.auth.GoogleAuthProvider();
 
-var OWNER_EMAIL = "eliezerkolin@gmail.com"; // ← המייל הראשי — לא ניתן למחיקה
+var OWNER_EMAIL    = APP_CONFIG.adminEmail;
 var ALLOWED_EMAILS = [OWNER_EMAIL]; // יתעדכן מ-Firestore
 var rsvps = [];
 var currentFilter = "all";
@@ -885,7 +879,7 @@ function exportCSV() {
   var csv = "\uFEFF" + lines.join("\n");
   var a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8;" }));
-  a.download = "אורחים_אליעזר_ויעל.csv";
+  a.download = "אורחים_אביאל_ופרח.csv";
   a.click();
 }
 
