@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>פאנל ניהול — אליעזר ויעל</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Alef:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:   #1e2d50;
+    --navy-m: #2d3f6b;
+    --steel:  #6a7fa3;
+    --gold:   #c9a96e;
+    --gold-l: #e8d5b0;
+    --fog:    #e8edf5;
+    --fog-d:  #d4dce9;
+    --white:  #f8fafc;
+    --muted:  #6a7fa3;
+    --text:   #1e2d50;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Alef', sans-serif;
+    background: var(--fog);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ===== LOGIN PAGE ===== */
+  .login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #1e2d50, #2d3f6b);
+    padding: 24px;
+  }
+
+  .login-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(201,169,110,0.25);
+    border-radius: 8px;
+    padding: 3rem 2.5rem;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+  }
+
+  .login-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.6rem;
+    color: var(--gold-l);
+    margin-bottom: 0.3rem;
+  }
+  .login-sub {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: rgba(232,237,245,0.45);
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+  }
+
+  .login-label {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    color: rgba(232,237,245,0.55);
+    text-transform: uppercase;
+    text-align: right;
+    margin-bottom: 0.4rem;
+  }
+
+  .login-input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    background: rgba(255,255,255,0.07);
+    border: 1.5px solid rgba(201,169,110,0.2);
+    color: white;
+    font-family: 'Alef', sans-serif;
+    font-size: 1rem;
+    border-radius: 4px;
+    outline: none;
+    margin-bottom: 1.2rem;
+    transition: border-color 0.2s;
+    text-align: center;
+    letter-spacing: 0.2em;
+  }
+  .login-input:focus { border-color: var(--gold); }
+
+  .login-btn {
+    width: 100%;
+    padding: 0.95rem;
+    background: var(--gold);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Alef', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-top: 0.3rem;
+  }
+  .login-btn:hover { background: #b8935a; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,169,110,0.3); }
+
+  .login-err {
+    color: #f0a0a0;
+    font-size: 0.8rem;
+    margin-top: 0.8rem;
+    display: none;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-top: 2rem;
+    color: rgba(232,237,245,0.3);
+    font-size: 0.75rem;
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: rgba(232,237,245,0.6); }
+
+  /* ===== ADMIN PANEL ===== */
+  .admin-page { display: none; }
+
+  .admin-header {
+    background: var(--navy);
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 12px rgba(30,45,80,0.15);
+  }
+  .admin-header-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--gold-l);
+  }
+  .admin-header-sub { font-size: 0.7rem; color: rgba(232,237,245,0.4); letter-spacing: 0.12em; }
+
+  .logout-btn {
+    background: transparent;
+    border: 1px solid rgba(201,169,110,0.3);
+    color: rgba(201,169,110,0.7);
+    padding: 0.4rem 1rem;
+    font-family: 'Alef', sans-serif;
+    font-size: 0.78rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .logout-btn:hover { border-color: var(--gold); color: var(--gold-l); }
+
+  .admin-body { max-width: 900px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+
+  /* STATS */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .stat-card {
+    background: white;
+    border-radius: 6px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 16px rgba(30,45,80,0.07);
+    border-top: 3px solid var(--gold);
+  }
+  .stat-card.blue  { border-top-color: var(--navy-m); }
+  .stat-card.green { border-top-color: #5a8a6a; }
+  .stat-card.red   { border-top-color: #8a4a4a; }
+  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; line-height: 1; color: var(--navy); }
+  .stat-lbl { font-size: 0.7rem; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; margin-top: 0.4rem; }
+
+  /* TABLE SECTION */
+  .table-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 20px rgba(30,45,80,0.07);
+    overflow: hidden;
+  }
+
+  .table-header {
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid var(--fog);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+  .table-title { font-weight: 700; color: var(--navy); font-size: 1rem; }
+
+  .filter-tabs { display: flex; gap: 0.4rem; }
+  .ftab {
+    padding: 0.35rem 0.9rem;
+    border: 1px solid var(--fog-d);
+    background: var(--white);
+    color: var(--muted);
+    font-family: 'Alef', sans-serif;
+    font-size: 0.78rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .ftab.active { background: var(--navy); color: white; border-color: var(--navy); }
+
+  .export-btn {
+    padding: 0.4rem 1rem;
+    background: var(--fog);
+    border: 1px solid var(--fog-d);
+    color: var(--muted);
+    font-family: 'Alef', sans-serif;
+    font-size: 0.78rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .export-btn:hover { background: var(--navy); color: white; border-color: var(--navy); }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead th { background: var(--fog); padding: 0.75rem 1.2rem; text-align: right; font-size: 0.75rem; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; font-weight: 700; border-bottom: 1px solid var(--fog-d); }
+  tbody td { padding: 0.85rem 1.2rem; border-bottom: 1px solid var(--fog); font-size: 0.9rem; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: #f5f8ff; }
+
+  .badge { display: inline-block; padding: 0.2rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+  .b-yes { background: rgba(45,100,80,0.12); color: #1a5a40; }
+  .b-no  { background: rgba(160,60,60,0.12); color: #7a2020; }
+
+  .empty-state {
+    padding: 4rem;
+    text-align: center;
+    color: var(--muted);
+  }
+  .empty-state .ei { font-size: 2.5rem; margin-bottom: 0.8rem; }
+  .empty-state p { font-style: italic; }
+
+  @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+  .google-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 0.9rem 1.5rem;
+    background: white;
+    border: 1.5px solid rgba(232,237,245,0.25);
+    border-radius: 50px;
+    color: #1e2d50;
+    font-family: 'Alef', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-bottom: 0.5rem;
+  }
+  .google-btn:hover {
+    background: #f5f5f5;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .google-btn svg { flex-shrink: 0; }
+
+  .access-denied {
+    display: none;
+    background: rgba(180,60,60,0.15);
+    border: 1px solid rgba(180,60,60,0.4);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    margin-top: 1rem;
+    color: #f0b0b0;
+  }
+  .access-denied .di { font-size: 2rem; margin-bottom: 0.5rem; }
+  .access-denied p { font-size: 0.85rem; opacity: 0.85; line-height: 1.5; }
+
+  @media(max-width:600px){
+    .admin-header { flex-direction: column; gap: 0.8rem; text-align: center; }
+    .table-header { flex-direction: column; }
+    .filter-tabs { flex-wrap: wrap; }
+
+    /* טבלה במובייל — ללא גלילה */
+    .table-section { overflow-x: visible; }
+    table { min-width: 0; width: 100%; font-size: 0.82rem; }
+    thead th { padding: 0.55rem 0.5rem; font-size: 0.68rem; }
+    tbody td { padding: 0.6rem 0.5rem; }
+
+    /* הסתר עמודות פחות חשובות במובייל */
+    .col-phone,
+    .col-date,
+    .col-transport { display: none; }
+
+    /* שורת מחיקה קטנה */
+    .col-del { width: 30px; }
+
+    /* stats grid — 2 בשורה */
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+
+    /* push banner */
+    .push-banner { flex-direction: column; text-align: center; }
+
+    /* permissions */
+    .perm-add-row { flex-direction: column; }
+  }
+
+  .google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.9rem 1.5rem;
+    background: white;
+    color: #3c4043;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    border-radius: 6px;
+    font-family: 'Alef', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-top: 0.5rem;
+    letter-spacing: 0.03em;
+  }
+  .google-btn:hover {
+    background: #f8f9fa;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    transform: translateY(-1px);
+  }
+  .google-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .g-spinner {
+    width: 18px; height: 18px;
+    border: 2px solid #ddd;
+    border-top-color: #4285F4;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+  }
+
+  /* PERMISSIONS */
+  .perm-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 20px rgba(30,45,80,0.07);
+    overflow: hidden;
+    margin-top: 1.5rem;
+  }
+  .perm-header {
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid var(--fog);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+  .perm-title { font-weight: 700; color: var(--navy); font-size: 1rem; }
+  .perm-body { padding: 1.5rem; }
+  .perm-add-row {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .perm-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.7rem 1rem;
+    border: 1.5px solid var(--fog-d);
+    background: var(--fog);
+    font-family: 'Alef', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text);
+    border-radius: 4px;
+    outline: none;
+    direction: ltr;
+    text-align: left;
+    transition: border-color 0.2s;
+  }
+  .perm-input:focus { border-color: var(--navy); background: white; }
+  .perm-add-btn {
+    padding: 0.7rem 1.5rem;
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Alef', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .perm-add-btn:hover { background: var(--navy-m); transform: translateY(-1px); }
+  .perm-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .perm-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: var(--fog);
+    border-radius: 4px;
+    border: 1px solid var(--fog-d);
+  }
+  .perm-email {
+    font-family: monospace;
+    font-size: 0.88rem;
+    color: var(--navy);
+    direction: ltr;
+    text-align: left;
+  }
+  .perm-owner-badge {
+    font-size: 0.7rem;
+    background: rgba(45,63,107,0.12);
+    color: var(--navy);
+    padding: 0.15rem 0.5rem;
+    border-radius: 10px;
+    margin-right: 0.5rem;
+  }
+  .perm-del-btn {
+    background: none;
+    border: none;
+    color: #c07070;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    transition: background 0.2s;
+  }
+  .perm-del-btn:hover { background: rgba(180,80,80,0.1); }
+  .perm-msg {
+    font-size: 0.8rem;
+    padding: 0.5rem 0;
+    min-height: 1.5rem;
+  }
+  .perm-msg.ok  { color: #2a7a4a; }
+  .perm-msg.err { color: #b44; }
+  .perm-empty { color: var(--muted); font-style: italic; font-size: 0.85rem; padding: 0.5rem 0; }
+  /* PUSH NOTIFICATIONS */
+  .push-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: linear-gradient(135deg, var(--navy), var(--navy-m));
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .push-banner-text { font-size: 0.88rem; opacity: 0.9; }
+  .push-banner-text strong { display: block; font-size: 1rem; margin-bottom: 0.2rem; opacity: 1; }
+  .push-enable-btn {
+    background: var(--gold);
+    color: white;
+    border: none;
+    padding: 0.65rem 1.4rem;
+    border-radius: 4px;
+    font-family: 'Alef', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .push-enable-btn:hover { background: #b8935a; transform: translateY(-1px); }
+  .push-enable-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
+  .push-status-ok {
+    background: rgba(42,122,74,0.15);
+    border: 1px solid rgba(42,122,74,0.3);
+    color: #1a5a3a;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div class="login-page" id="login-page">
+  <div class="login-card">
+    <div style="font-size:2rem;margin-bottom:1rem">✦</div>
+    <h1 class="login-title">אליעזר &amp; יעל</h1>
+    <p class="login-sub">פאנל ניהול אורחים</p>
+
+    <button class="google-btn" id="google-btn" onclick="signInWithGoogle()">
+      <!-- SVG injected by JS -->
+      התחבר עם Google
+    </button>
+
+    <p class="login-err" id="login-err" style="display:none"></p>
+
+    <a class="back-link" href="index.html">← חזרה לאתר</a>
+  </div>
+</div>
+
+<!-- ===== ADMIN PANEL ===== -->
+<div class="admin-page" id="admin-page">
+
+  <header class="admin-header">
+    <div>
+      <div class="admin-header-title">אליעזר &amp; יעל — פאנל אורחים</div>
+      <div class="admin-header-sub">05.05.2026 &nbsp;·&nbsp; בית זלטה, כפר חב״ד &nbsp;·&nbsp; <span id="user-email" style="opacity:0.7"></span></div>
+    </div>
+    <button class="logout-btn" onclick="logout()">התנתק</button>
+  </header>
+
+  <div class="admin-body">
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card green">
+        <div class="stat-num" id="s-yes">0</div>
+        <div class="stat-lbl">מגיעים</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-num" id="s-total">0</div>
+        <div class="stat-lbl">סה״כ אורחים</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-num" id="s-no">0</div>
+        <div class="stat-lbl">לא מגיעים</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="s-all">0</div>
+        <div class="stat-lbl">סה״כ תגובות</div>
+      </div>
+    </div>
+
+    <!-- PUSH NOTIFICATIONS BANNER -->
+    <div id="push-banner" class="push-banner" style="display:none">
+      <div class="push-banner-text">
+        <strong>🔔 התראות אישור הגעה</strong>
+        קבל התראה מיידית בכל פעם שאורח מאשר הגעה
+      </div>
+      <button class="push-enable-btn" id="push-btn" onclick="enablePush()">הפעל התראות</button>
+    </div>
+    <div id="push-active" class="push-status-ok" style="display:none">
+      ✅ &nbsp; התראות פעילות — תקבל עדכון על כל אישור הגעה חדש
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-section">
+      <div class="table-header">
+        <span class="table-title">רשימת מוזמנים</span>
+        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center;">
+          <div class="filter-tabs">
+            <button class="ftab active" onclick="filterTable('all', this)">הכל</button>
+            <button class="ftab" onclick="filterTable('yes', this)">מגיעים</button>
+            <button class="ftab" onclick="filterTable('no', this)">לא מגיעים</button>
+          </div>
+          <button class="export-btn" id="refresh-btn" onclick="refreshData()" style="margin-left:0.4rem">🔄 רענן</button>
+          <button class="export-btn" onclick="exportCSV()">⬇ ייצוא CSV</button>
+        </div>
+      </div>
+      <div id="tbl-wrap"></div>
+    </div>
+
+  <!-- PERMISSIONS -->
+    <div class="perm-section">
+      <div class="perm-header">
+        <span class="perm-title">🔐 ניהול הרשאות כניסה</span>
+      </div>
+      <div class="perm-body">
+        <div class="perm-add-row">
+          <input class="perm-input" type="email" id="perm-email-input" placeholder="הכנס כתובת אימייל..." onkeydown="if(event.key==='Enter') addPermission()" />
+          <button class="perm-add-btn" onclick="addPermission()">+ הוסף הרשאה</button>
+        </div>
+        <p class="perm-msg" id="perm-msg"></p>
+        <div class="perm-list" id="perm-list">
+          <p class="perm-empty">טוען...</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js"></script>
+<script>
+var firebaseConfig = {
+  apiKey: "************************",
+  authDomain: "eliezer-yael-wedding.firebaseapp.com",
+  projectId: "eliezer-yael-wedding",
+  storageBucket: "eliezer-yael-wedding.firebasestorage.app",
+  messagingSenderId: "980359740134",
+  appId: "1:980359740134:web:b9006d2d90fe71c9ce5927"
+};
+
+firebase.initializeApp(firebaseConfig);
+var db        = firebase.firestore();
+var auth      = firebase.auth();
+var messaging = firebase.messaging();
+var VAPID_KEY = "********************************"; // ← יש להחליף במפתח VAPID שלך לקבלת התראות דפדפן
+var provider = new firebase.auth.GoogleAuthProvider();
+
+var OWNER_EMAIL = "eliezerkolin@gmail.com"; // ← המייל הראשי — לא ניתן למחיקה
+var ALLOWED_EMAILS = [OWNER_EMAIL]; // יתעדכן מ-Firestore
+var rsvps = [];
+var currentFilter = "all";
+
+// ===== AUTH STATE =====
+auth.onAuthStateChanged(function(user) {
+  if (!user) {
+    document.getElementById("login-page").style.display    = "flex";
+    document.getElementById("admin-page").style.display    = "none";
+    document.getElementById("access-denied").style.display = "none";
+    document.getElementById("login-main").style.display    = "block";
+    return;
+  }
+  // Check both static list and Firestore admins collection
+  db.collection("admins").get().then(function(snap) {
+    var allowed = [OWNER_EMAIL];
+    snap.forEach(function(d) { allowed.push(d.data().email.toLowerCase()); });
+    ALLOWED_EMAILS = allowed;
+
+    if (allowed.includes(user.email.toLowerCase())) {
+      document.getElementById("login-page").style.display  = "none";
+      document.getElementById("admin-page").style.display  = "block";
+      document.getElementById("user-email").textContent    = user.email;
+      loadAndRender();
+      loadPermissions();
+    } else {
+      auth.signOut();
+      document.getElementById("denied-email").textContent    = user.email;
+      document.getElementById("access-denied").style.display = "block";
+      document.getElementById("login-main").style.display    = "none";
+    }
+  });
+
+});
+
+function signInWithGoogle() {
+  provider.setCustomParameters({ prompt: "select_account" });
+  auth.signInWithPopup(provider).catch(function(e) {
+    if (e.code !== "auth/popup-closed-by-user") {
+      alert("שגיאה בהתחברות: " + e.message);
+    }
+  });
+}
+
+function logout() {
+  auth.signOut();
+}
+
+// ===== LOAD =====
+function loadAndRender() {
+  var wrap = document.getElementById("tbl-wrap");
+  if (wrap) wrap.innerHTML = "<div class='empty-state'><div class='ei'>⏳</div><p>טוען נתונים...</p></div>";
+
+  db.collection("rsvps").get().then(function(snap) {
+    rsvps = [];
+    snap.forEach(function(d) {
+      var data = d.data();
+      rsvps.push({
+        id:        d.id,
+        name:      data.name      || "",
+        phone:     data.phone     || "",
+        attend:    data.attend    || "",
+        guests:    data.guests    || 0,
+        timestamp: data.timestamp || ""
+      });
+    });
+    rsvps.sort(function(a, b) {
+      return (b.timestamp || "").localeCompare(a.timestamp || "");
+    });
+    console.log("Loaded", rsvps.length, "rsvps:", rsvps);
+    renderStats();
+    renderTable();
+  }).catch(function(e) {
+    console.error("Firestore load error:", e);
+    var wrap2 = document.getElementById("tbl-wrap");
+    if (wrap2) wrap2.innerHTML = "<div class='empty-state'><div class='ei'>❌</div><p>שגיאה בטעינה: " + e.message + "</p></div>";
+  });
+}
+
+// ===== STATS =====
+function renderStats() {
+  var yes   = rsvps.filter(function(r) { return r.attend === "yes"; });
+  var no    = rsvps.filter(function(r) { return r.attend !== "yes"; });
+  var total = yes.reduce(function(s, r) { return s + (Number(r.guests) || 1); }, 0);
+  document.getElementById("s-yes").textContent   = yes.length;
+  document.getElementById("s-no").textContent    = no.length;
+  document.getElementById("s-total").textContent = total;
+  document.getElementById("s-all").textContent   = rsvps.length;
+}
+
+// ===== FILTER =====
+function filterTable(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll(".ftab").forEach(function(b) { b.classList.remove("active"); });
+  btn.classList.add("active");
+  renderTable();
+}
+
+// ===== TABLE =====
+function renderTable() {
+  console.log("renderTable called, rsvps:", rsvps.length, "filter:", currentFilter);
+  var filtered = currentFilter === "all"
+    ? rsvps
+    : rsvps.filter(function(r) { return r.attend === currentFilter; });
+
+  console.log("filtered:", filtered.length, "items:", JSON.stringify(filtered.slice(0,1)));
+
+  var wrap = document.getElementById("tbl-wrap");
+  if (!wrap) { console.log("tbl-wrap not found!"); return; }
+
+  if (!filtered.length) {
+    wrap.innerHTML = "<div class='empty-state'><div class='ei'>📋</div><p>" +
+      (rsvps.length ? "אין תוצאות לפילטר זה" : "אין אישורי הגעה עדיין") + "</p></div>";
+    return;
+  }
+
+  // Build table using DOM - no quote issues
+  var table = document.createElement("table");
+
+  // Header
+  var thead = document.createElement("thead");
+  var hrow  = document.createElement("tr");
+  var headers = [
+    { text: "#",      cls: "" },
+    { text: "שם",     cls: "" },
+    { text: "טלפון",  cls: "col-phone" },
+    { text: "מגיע?",  cls: "" },
+    { text: "אורחים", cls: "col-num" },
+    { text: "תאריך",  cls: "col-date" },
+    { text: "",       cls: "col-del" }
+  ];
+  headers.forEach(function(h) {
+    var th = document.createElement("th");
+    th.textContent = h.text;
+    if (h.cls) th.className = h.cls;
+    hrow.appendChild(th);
+  });
+  thead.appendChild(hrow);
+  table.appendChild(thead);
+
+  // Body
+  var tbody = document.createElement("tbody");
+  filtered.forEach(function(r, i) {
+    var tr = document.createElement("tr");
+
+    // #
+    var td0 = document.createElement("td");
+    td0.textContent = i + 1;
+    tr.appendChild(td0);
+
+    // שם
+    var td1 = document.createElement("td");
+    var strong = document.createElement("strong");
+    strong.textContent = r.name;
+    td1.appendChild(strong);
+    tr.appendChild(td1);
+
+    // טלפון
+    var td2 = document.createElement("td");
+    td2.className = "col-phone";
+    if (r.phone) {
+      var a = document.createElement("a");
+      a.href = "tel:" + r.phone;
+      a.textContent = r.phone;
+      a.style.cssText = "color:var(--navy-m);text-decoration:none";
+      td2.appendChild(a);
+    } else {
+      td2.textContent = "—";
+    }
+    tr.appendChild(td2);
+
+    // מגיע?
+    var td3 = document.createElement("td");
+    var badge = document.createElement("span");
+    badge.className = "badge " + (r.attend === "yes" ? "b-yes" : "b-no");
+    badge.textContent = r.attend === "yes" ? "✓ מגיע/ה" : "✗ לא מגיע/ה";
+    td3.appendChild(badge);
+    tr.appendChild(td3);
+
+    // אורחים
+    var td4 = document.createElement("td");
+    td4.className = "col-num";
+    td4.textContent = r.attend === "yes" ? (r.guests || 1) : "—";
+    tr.appendChild(td4);
+
+    // תאריך
+    var td5 = document.createElement("td");
+    td5.className = "col-date";
+    td5.style.cssText = "color:var(--muted);font-size:0.8rem";
+    td5.textContent = r.timestamp || "";
+    tr.appendChild(td5);
+
+    // הסעה
+    var td6t = document.createElement("td");
+    td6t.className = "col-transport";
+    var tVal = r.transport || "—";
+    if (tVal === "כן") {
+      td6t.innerHTML = "<span style='color:#2a6a4a;font-weight:700'>🚌 כן</span>";
+    } else if (tVal === "לא") {
+      td6t.innerHTML = "<span style='color:var(--muted)'>🚗 לא</span>";
+    } else {
+      td6t.textContent = "—";
+      td6t.style.color = "var(--muted)";
+    }
+    tr.appendChild(td6t);
+
+    // מחיקה
+    var td6 = document.createElement("td");
+    td6.className = "col-del";
+    var delBtn = document.createElement("button");
+    delBtn.style.cssText = "background:none;border:none;cursor:pointer;color:#c07070;font-size:1rem;padding:0.2rem 0.5rem";
+    delBtn.title = "מחק";
+    delBtn.textContent = "🗑";
+    delBtn.addEventListener("click", function() { deleteRSVP(r.id); });
+    td6.appendChild(delBtn);
+    tr.appendChild(td6);
+
+    tbody.appendChild(tr);
+  });
+
+  table.appendChild(tbody);
+  wrap.innerHTML = "";
+  wrap.appendChild(table);
+}
+
+// ===== DELETE =====
+function deleteRSVP(id) {
+  if (!confirm("למחוק את הרשומה?")) return;
+  db.collection("rsvps").doc(id).delete().then(function() {
+    rsvps = rsvps.filter(function(r) { return r.id !== id; });
+    renderStats();
+    renderTable();
+  }).catch(function(e) {
+    alert("שגיאה במחיקה: " + e.message);
+  });
+}
+
+// ===== REFRESH =====
+function refreshData() {
+  var btn = document.getElementById("refresh-btn");
+  btn.textContent = "⏳ מרענן...";
+  btn.disabled = true;
+  db.collection("rsvps").get().then(function(snap) {
+    rsvps = [];
+    snap.forEach(function(d) { rsvps.push(Object.assign({ id: d.id }, d.data())); });
+    rsvps.sort(function(a, b) { return (b.timestamp || "").localeCompare(a.timestamp || ""); });
+    renderStats();
+    renderTable();
+    btn.textContent = "🔄 רענן";
+    btn.disabled = false;
+  });
+}
+
+// ===== EXPORT =====
+function exportCSV() {
+  var rows = [["שם","טלפון","מגיע","מספר אורחים","הסעה","תאריך"]];
+  rsvps.forEach(function(r) {
+    rows.push([r.name, r.phone||"", r.attend==="yes"?"כן":"לא", r.attend==="yes"?(r.guests||1):0, r.transport||"—", r.timestamp||""]);
+  });
+  var lines = rows.map(function(r) {
+    return r.map(function(c) { return '"' + String(c).replace(/"/g,'""') + '"'; }).join(",");
+  });
+  var csv = "\uFEFF" + lines.join("\n");
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8;" }));
+  a.download = "אורחים_אליעזר_ויעל.csv";
+  a.click();
+}
+
+
+// ===== PERMISSIONS =====
+function loadPermissions() {
+  var list = document.getElementById("perm-list");
+  if (!list) return;
+
+  db.collection("admins").get().then(function(snap) {
+    var emails = [];
+    snap.forEach(function(d) { emails.push({ id: d.id, email: d.data().email }); });
+
+    // Sync ALLOWED_EMAILS
+    ALLOWED_EMAILS = [OWNER_EMAIL];
+    emails.forEach(function(e) {
+      if (!ALLOWED_EMAILS.includes(e.email.toLowerCase())) {
+        ALLOWED_EMAILS.push(e.email.toLowerCase());
+      }
+    });
+
+    renderPermissions(emails);
+  }).catch(function(e) {
+    console.error("loadPermissions error:", e);
+  });
+}
+
+function renderPermissions(emails) {
+  var list = document.getElementById("perm-list");
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  // Owner row
+  var ownerDiv = document.createElement("div");
+  ownerDiv.className = "perm-item";
+  ownerDiv.innerHTML = "<span class='perm-email'>" + OWNER_EMAIL + "</span><span class='perm-owner-badge'>בעלים</span>";
+  list.appendChild(ownerDiv);
+
+  // Others
+  var others = emails.filter(function(e) { return e.email.toLowerCase() !== OWNER_EMAIL; });
+
+  if (others.length === 0) {
+    var empty = document.createElement("p");
+    empty.className = "perm-empty";
+    empty.textContent = "אין מורשים נוספים";
+    list.appendChild(empty);
+    return;
+  }
+
+  others.forEach(function(item) {
+    var row    = document.createElement("div");
+    row.className = "perm-item";
+
+    var emailSpan = document.createElement("span");
+    emailSpan.className = "perm-email";
+    emailSpan.textContent = item.email;
+
+    var delBtn = document.createElement("button");
+    delBtn.className = "perm-del-btn";
+    delBtn.title = "הסר הרשאה";
+    delBtn.textContent = "🗑";
+    delBtn.addEventListener("click", function() {
+      removePermission(item.id, item.email);
+    });
+
+    row.appendChild(emailSpan);
+    row.appendChild(delBtn);
+    list.appendChild(row);
+  });
+}
+
+function addPermission() {
+  var input = document.getElementById("perm-email-input");
+  var msg   = document.getElementById("perm-msg");
+  var email = input.value.trim().toLowerCase();
+
+  if (!email) { showPermMsg("אנא הכנס כתובת אימייל", "err"); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showPermMsg("כתובת אימייל לא תקינה", "err"); return; }
+  if (ALLOWED_EMAILS.includes(email)) { showPermMsg("המייל כבר קיים ברשימה", "err"); return; }
+
+  db.collection("admins").add({ email: email }).then(function() {
+    input.value = "";
+    showPermMsg("✓ " + email + " נוסף בהצלחה", "ok");
+    loadPermissions();
+  }).catch(function(e) {
+    showPermMsg("שגיאה: " + e.message, "err");
+  });
+}
+
+function removePermission(id, email) {
+  if (!confirm("להסיר הרשאה מ-" + email + "?")) return;
+  db.collection("admins").doc(id).delete().then(function() {
+    showPermMsg("✓ הוסרה הרשאה מ-" + email, "ok");
+    loadPermissions();
+  }).catch(function(e) {
+    showPermMsg("שגיאה: " + e.message, "err");
+  });
+}
+
+function showPermMsg(text, type) {
+  var msg = document.getElementById("perm-msg");
+  if (!msg) return;
+  msg.textContent = text;
+  msg.className = "perm-msg " + type;
+  setTimeout(function() { msg.textContent = ""; msg.className = "perm-msg"; }, 4000);
+}
+
+
+// ===== PUSH NOTIFICATIONS =====
+function initPush() {
+  if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
+
+  // Register service worker
+  navigator.serviceWorker.register('/firebase-messaging-sw.js').then(function(reg) {
+    console.log('SW registered:', reg.scope);
+  }).catch(function(e) {
+    console.warn('SW registration failed:', e);
+  });
+
+  // Check current permission
+  if (Notification.permission === 'granted') {
+    document.getElementById('push-banner').style.display = 'none';
+    document.getElementById('push-active').style.display = 'flex';
+    subscribeToTopic();
+  } else if (Notification.permission === 'default') {
+    document.getElementById('push-banner').style.display = 'flex';
+  }
+  // If denied - hide both (don't bother user)
+}
+
+function enablePush() {
+  var btn = document.getElementById('push-btn');
+  btn.textContent = 'מפעיל...';
+  btn.disabled = true;
+
+  Notification.requestPermission().then(function(permission) {
+    if (permission === 'granted') {
+      subscribeToTopic();
+      document.getElementById('push-banner').style.display = 'none';
+      document.getElementById('push-active').style.display = 'flex';
+    } else {
+      btn.textContent = 'הפעל התראות';
+      btn.disabled = false;
+      alert('לא אישרת התראות. ניתן לשנות בהגדרות הדפדפן.');
+    }
+  });
+}
+
+function subscribeToTopic() {
+  messaging.getToken({ vapidKey: VAPID_KEY }).then(function(token) {
+    if (token) {
+      // Save token to Firestore so index.html can send notifications
+      db.collection('fcm_tokens').doc('admin').set({
+        token: token,
+        updated: new Date().toISOString()
+      }).then(function() {
+        console.log('FCM token saved');
+      });
+
+      // Listen for foreground messages
+      messaging.onMessage(function(payload) {
+        var n = payload.notification || {};
+        if (Notification.permission === 'granted') {
+          new Notification(n.title || 'אישור הגעה חדש!', {
+            body: n.body || '',
+            icon: '/icon.png',
+            dir: 'rtl'
+          });
+        }
+      });
+    }
+  }).catch(function(e) {
+    console.warn('FCM token error:', e);
+  });
+}
+
+// Call initPush after login
+</script>
+</body>
+</html>
