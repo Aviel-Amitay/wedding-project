@@ -201,13 +201,22 @@
       <div id="guests-block" style="display:none">
         <label class="form-label">כמה משתתפים מגיעים? (כולל עצמך)</label>
         <div class="counter-wrap">
-          <span class="counter-lbl">מספר משתתפים</span>
+          <span class="counter-lbl">מספר גברים</span>
           <div class="counter-controls">
-            <button class="c-btn" onclick="chg(-1)" aria-label="הפחת">−</button>
-            <span class="c-num" id="cnt">1</span>
-            <button class="c-btn" onclick="chg(+1)" aria-label="הוסף">+</button>
+            <button class="c-btn" onclick="chgGender('men',-1)" aria-label="הפחת">−</button>
+            <span class="c-num" id="cnt-men">1</span>
+            <button class="c-btn" onclick="chgGender('men',+1)" aria-label="הוסף">+</button>
           </div>
         </div>
+        <div class="counter-wrap">
+          <span class="counter-lbl">מספר נשים</span>
+          <div class="counter-controls">
+            <button class="c-btn" onclick="chgGender('women',-1)" aria-label="הפחת">−</button>
+            <span class="c-num" id="cnt-women">0</span>
+            <button class="c-btn" onclick="chgGender('women',+1)" aria-label="הוסף">+</button>
+          </div>
+        </div>
+        <div class="counter-total">סה"כ: <span id="cnt-total">1</span></div>
       </div>
 
       <div id="no-attend-block" style="display:none">
@@ -218,13 +227,6 @@
           placeholder="ברכות חמות לאביאל ופרח היקרים..."
           maxlength="500"
         ></textarea>
-        <a
-          class="bit-link-form"
-          href="https://www.bitpay.co.il/app/me/53F157CB-E403-6C48-D197-E9233F6204E233FD"
-          target="_blank"
-          rel="noopener noreferrer"
-          onclick="recordBitClick()"
-        ><img src="images/bit-logo.png" alt="Bit" class="bit-logo-img"/>&nbsp;שלח/י מתנה דרך Bit</a>
       </div>
 
       <button class="submit-btn" id="submit-btn" onclick="doSubmit()">שלח אישור הגעה ✦</button>
@@ -234,6 +236,21 @@
       <div class="success-icon" id="s-icon">💌</div>
       <h3 id="s-head">תודה רבה!</h3>
       <p id="s-body">נתראה בשמחה!</p>
+      <div id="s-cal" style="display:none;margin-top:1.4rem;">
+        <a class="bit-link-form"
+           href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=%D7%97%D7%AA%D7%95%D7%A0%D7%AA+%D7%90%D7%91%D7%99%D7%90%D7%9C+%D7%95%D7%A4%D7%A8%D7%97&dates=20260916T160000Z%2F20260916T200000Z&location=%D7%90%D7%95%D7%9C%D7%9E%D7%99+%D7%90%D7%92%D7%9E%D7%99%D7%9D%2C+%D7%9E%D7%A9%D7%94+%D7%93%D7%95%D7%A8%D7%95%D7%AA+2%2C+%D7%90%D7%A9%D7%A7%D7%9C%D7%95%D7%9F&details=%D7%AA%D7%95%D7%93%D7%94+%D7%A8%D7%91%D7%94+%D7%A9%D7%90%D7%AA%D7%9D+%D7%A9%D7%9E%D7%97%D7%99%D7%9D+%D7%90%D7%99%D7%AA%D7%A0%D7%95+%D7%91%D7%A9%D7%9E%D7%97%D7%AA%D7%A0%D7%95.%0A%0A%D7%9E%D7%97%D7%9B%D7%99%D7%9D+%D7%9C%D7%9B%D7%9D+%F0%9F%8C%B9"
+           target="_blank" rel="noopener noreferrer">
+          📅&nbsp;הוסף ליומן
+        </a>
+      </div>
+      <div id="s-gift" style="display:none;margin-top:1.4rem;">
+        <a class="bit-link-form"
+           href="https://www.bitpay.co.il/app/me/53F157CB-E403-6C48-D197-E9233F6204E233FD"
+           target="_blank" rel="noopener noreferrer"
+           onclick="recordBitClick()">
+          <img src="images/bit-logo.png" alt="Bit" class="bit-logo-img"/>&nbsp;שלח/י מתנה דרך Bit
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -304,7 +321,7 @@ var db = firebase.firestore();
 
 // === STATE ===
 var attend = null;
-var gcount = 1;
+var gmen = 1, gwomen = 0;
 
 // === DYNAMIC PHOTO LOADER ===
 // Tries each candidate in images/ in order; displays the first one that loads.
@@ -368,9 +385,15 @@ function setAttend(v, btn) {
 }
 
 // === COUNTER ===
-function chg(d) {
-  gcount = Math.max(1, Math.min(20, gcount + d));
-  document.getElementById('cnt').textContent = gcount;
+function chgGender(gender, d) {
+  if (gender === 'men') {
+    gmen = Math.max(0, Math.min(20, gmen + d));
+    document.getElementById('cnt-men').textContent = gmen;
+  } else {
+    gwomen = Math.max(0, Math.min(20, gwomen + d));
+    document.getElementById('cnt-women').textContent = gwomen;
+  }
+  document.getElementById('cnt-total').textContent = gmen + gwomen;
 }
 
 // === SUBMIT ===
@@ -380,6 +403,7 @@ function doSubmit() {
 
   if (!name)   { alert('אנא הזן/י שם מלא'); return; }
   if (!attend) { alert('אנא בחר/י האם תגיע/י'); return; }
+  if (attend === 'yes' && (gmen + gwomen) === 0) { alert('אנא הזן/י לפחות משתתף אחד'); return; }
 
   var btn = document.getElementById('submit-btn');
   btn.textContent = 'שולח...';
@@ -399,7 +423,9 @@ function doSubmit() {
         name:      name,
         phone:     phone,
         attend:    _attend,
-        guests:    _attend === 'yes' ? gcount : 0,
+        guests:    _attend === 'yes' ? (gmen + gwomen) : 0,
+        men:       _attend === 'yes' ? gmen : 0,
+        women:     _attend === 'yes' ? gwomen : 0,
         timestamp: new Date().toLocaleDateString('he-IL')
       });
     })
@@ -424,11 +450,13 @@ function doSubmit() {
         document.getElementById('s-head').textContent = 'מעולה ' + name + '!';
         document.getElementById('s-body').textContent =
           'שמחנו לשמוע! נתראה ב-16.9.2026 באולמי אגמים 🌹';
+        document.getElementById('s-cal').style.display = 'block';
       } else {
         document.getElementById('s-icon').textContent = '💌';
         document.getElementById('s-head').textContent = 'תודה ' + name + ' על ההודעה';
         document.getElementById('s-body').textContent =
           'חבל שלא תוכל/י להגיע — הברכה שלך תשמח את הזוג! 🌸';
+        document.getElementById('s-gift').style.display = 'block';
       }
     })
     .catch(function(e) {
