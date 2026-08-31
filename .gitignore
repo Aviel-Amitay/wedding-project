@@ -1,4 +1,6 @@
-# Sensitive config — copy config.example.js → config.js and fill in real values
+# Sensitive config — copy .env.example → .env and fill in values
+# Run  bash build.sh  to generate config.js from .env
+.env
 config.js
 
 # OS

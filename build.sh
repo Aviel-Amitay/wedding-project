@@ -1,6 +1,13 @@
 #!/bin/bash
-# Generates config.js from Netlify environment variables at build time.
-# Set these vars in: Netlify → Site → Site configuration → Environment variables
+# Generates config.js from environment variables.
+#
+# Local dev:  bash build.sh          (loads .env automatically)
+# Netlify:    runs automatically      (reads from Netlify env vars)
+
+# Load .env if present (local development)
+if [ -f .env ]; then
+  export $(grep -v '^#' .env | grep -v '^$' | xargs)
+fi
 
 cat > config.js << EOF
 var APP_CONFIG = {
@@ -17,4 +24,4 @@ var APP_CONFIG = {
 };
 EOF
 
-echo "config.js generated successfully"
+echo "✓ config.js generated"
