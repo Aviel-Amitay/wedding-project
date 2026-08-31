@@ -384,6 +384,14 @@ body {
   color:#fff;
   transform:translateY(-1px);
 }
+.bit-logo-img {
+  width:26px;
+  height:26px;
+  border-radius:6px;
+  object-fit:cover;
+  flex-shrink:0;
+  vertical-align:middle;
+}
 
 /* === GUEST COUNTER === */
 .counter-wrap {
