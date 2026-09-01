@@ -394,21 +394,6 @@ body {
 }
 
 /* === GUEST COUNTER === */
-.counter-total {
-  text-align:center;
-  font-size:0.88rem;
-  color:var(--text-s);
-  padding:0.5rem 0 0.1rem;
-  border-top:1px solid var(--card-b);
-  margin-top:0.2rem;
-  transition:color 0.3s;
-}
-.counter-total span {
-  font-family:'Frank Ruhl Libre', serif;
-  font-size:1.25rem;
-  color:var(--gold);
-  font-weight:700;
-}
 .counter-wrap {
   display:flex;
   align-items:center;

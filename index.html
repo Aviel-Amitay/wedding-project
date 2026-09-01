@@ -201,22 +201,13 @@
       <div id="guests-block" style="display:none">
         <label class="form-label">כמה משתתפים מגיעים? (כולל עצמך)</label>
         <div class="counter-wrap">
-          <span class="counter-lbl">מספר גברים</span>
+          <span class="counter-lbl">מספר משתתפים</span>
           <div class="counter-controls">
-            <button class="c-btn" onclick="chgGender('men',-1)" aria-label="הפחת">−</button>
-            <span class="c-num" id="cnt-men">1</span>
-            <button class="c-btn" onclick="chgGender('men',+1)" aria-label="הוסף">+</button>
+            <button class="c-btn" onclick="chg(-1)" aria-label="הפחת">−</button>
+            <span class="c-num" id="cnt">1</span>
+            <button class="c-btn" onclick="chg(+1)" aria-label="הוסף">+</button>
           </div>
         </div>
-        <div class="counter-wrap">
-          <span class="counter-lbl">מספר נשים</span>
-          <div class="counter-controls">
-            <button class="c-btn" onclick="chgGender('women',-1)" aria-label="הפחת">−</button>
-            <span class="c-num" id="cnt-women">0</span>
-            <button class="c-btn" onclick="chgGender('women',+1)" aria-label="הוסף">+</button>
-          </div>
-        </div>
-        <div class="counter-total">סה"כ: <span id="cnt-total">1</span></div>
       </div>
 
       <div id="no-attend-block" style="display:none">
@@ -297,7 +288,7 @@
 <!-- === FOOTER === -->
 <footer>
   <span class="footer-names">אביאל &amp; פרח</span>
-  ט"ז בתשרי תשפ"ז &nbsp;·&nbsp; 16.9.2026 &nbsp;·&nbsp; אולמי אגמים, אשקלון
+  ה' בתשרי תשפ"ז &nbsp;·&nbsp; 16.9.2026 &nbsp;·&nbsp; אולמי אגמים, אשקלון
   <br>
   <a class="github-link" href="https://github.com/Aviel-Amitay/wedding-project" target="_blank" rel="noopener noreferrer">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -321,7 +312,7 @@ var db = firebase.firestore();
 
 // === STATE ===
 var attend = null;
-var gmen = 1, gwomen = 0;
+var gcount = 1;
 
 // === DYNAMIC PHOTO LOADER ===
 // Tries each candidate in images/ in order; displays the first one that loads.
@@ -385,15 +376,9 @@ function setAttend(v, btn) {
 }
 
 // === COUNTER ===
-function chgGender(gender, d) {
-  if (gender === 'men') {
-    gmen = Math.max(0, Math.min(20, gmen + d));
-    document.getElementById('cnt-men').textContent = gmen;
-  } else {
-    gwomen = Math.max(0, Math.min(20, gwomen + d));
-    document.getElementById('cnt-women').textContent = gwomen;
-  }
-  document.getElementById('cnt-total').textContent = gmen + gwomen;
+function chg(d) {
+  gcount = Math.max(1, Math.min(20, gcount + d));
+  document.getElementById('cnt').textContent = gcount;
 }
 
 // === SUBMIT ===
@@ -403,7 +388,6 @@ function doSubmit() {
 
   if (!name)   { alert('אנא הזן/י שם מלא'); return; }
   if (!attend) { alert('אנא בחר/י האם תגיע/י'); return; }
-  if (attend === 'yes' && (gmen + gwomen) === 0) { alert('אנא הזן/י לפחות משתתף אחד'); return; }
 
   var btn = document.getElementById('submit-btn');
   btn.textContent = 'שולח...';
@@ -423,9 +407,7 @@ function doSubmit() {
         name:      name,
         phone:     phone,
         attend:    _attend,
-        guests:    _attend === 'yes' ? (gmen + gwomen) : 0,
-        men:       _attend === 'yes' ? gmen : 0,
-        women:     _attend === 'yes' ? gwomen : 0,
+        guests:    _attend === 'yes' ? gcount : 0,
         timestamp: new Date().toLocaleDateString('he-IL')
       });
     })
