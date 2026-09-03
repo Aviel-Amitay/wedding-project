@@ -102,17 +102,26 @@
     </g>
   </svg>
 
-  <!-- Hero content: photo loaded dynamically from images/ -->
+  <!-- Hero gallery -->
   <div class="hero-content">
-    <img
-      id="invite-photo"
-      class="invite-photo"
-      src=""
-      alt="הזמנה לחתונת אביאל ופרח"
-    />
+    <div class="photo-gallery" id="photo-gallery" aria-label="גלריית תמונות">
+      <button class="gallery-stage" id="gallery-stage" type="button" aria-label="פתח תמונה בגודל מלא">
+        <img id="gallery-photo" class="invite-photo" src="" alt="" />
+      </button>
+      <button class="gallery-arrow gallery-prev" id="gallery-prev" type="button" aria-label="התמונה הקודמת">&#10094;</button>
+      <button class="gallery-arrow gallery-next" id="gallery-next" type="button" aria-label="התמונה הבאה">&#10095;</button>
+      <div class="gallery-dots" id="gallery-dots" aria-label="בחירת תמונה"></div>
+    </div>
     <div class="scroll-cta">אשר הגעה ↓</div>
   </div>
 </section>
+
+<div class="gallery-lightbox" id="gallery-lightbox" role="dialog" aria-modal="true" aria-label="תמונה בגודל מלא">
+  <button class="lightbox-close" id="lightbox-close" type="button" aria-label="סגור">&times;</button>
+  <button class="lightbox-arrow lightbox-prev" id="lightbox-prev" type="button" aria-label="התמונה הקודמת">&#10094;</button>
+  <img id="lightbox-photo" src="" alt="" />
+  <button class="lightbox-arrow lightbox-next" id="lightbox-next" type="button" aria-label="התמונה הבאה">&#10095;</button>
+</div>
 
 <!-- === INFO STRIP === -->
 <div class="info-strip">
@@ -122,7 +131,7 @@
   </div>
   <div class="info-item">
     <span class="info-lbl">שעה</span>
-    <span class="info-val">19:30</span>
+    <span class="info-val">19:00</span>
   </div>
   <div class="info-item">
     <span class="info-lbl">יום</span>
@@ -307,42 +316,125 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
-firebase.initializeApp(APP_CONFIG.firebase);
-var db = firebase.firestore();
+// Keep the visual site usable when local Firebase configuration is absent.
+var db = null;
+if (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.firebase && typeof firebase !== 'undefined') {
+  firebase.initializeApp(APP_CONFIG.firebase);
+  db = firebase.firestore();
+} else {
+  console.warn('Firebase is not configured. The gallery works, but RSVP submissions are disabled.');
+}
 
 // === STATE ===
 var attend = null;
 var gcount = 1;
 
-// === DYNAMIC PHOTO LOADER ===
-// Tries each candidate in images/ in order; displays the first one that loads.
-// To update the invitation photo, drop any .jpg/.png into images/ and add its
-// filename to the list below (or replace the existing entry).
-var PHOTO_CANDIDATES = [
-  'images/PHOTO-2026-08-29-22-50-03.jpg'
+// === PHOTO GALLERY ===
+// Add every new file from images/gallery to this list.
+var GALLERY_PHOTOS = [
+  'images/gallery/chabad-invitation.jpg',
+  'images/gallery/invitation.jpg'
 ];
 
-(function loadInvitePhoto() {
-  var img = document.getElementById('invite-photo');
-  var idx = 0;
+(function initGallery() {
+  var gallery = document.getElementById('photo-gallery');
+  var photo = document.getElementById('gallery-photo');
+  var dots = document.getElementById('gallery-dots');
+  var prev = document.getElementById('gallery-prev');
+  var next = document.getElementById('gallery-next');
+  var lightbox = document.getElementById('gallery-lightbox');
+  var lightboxPhoto = document.getElementById('lightbox-photo');
+  var current = 0;
+  var touchStartX = 0;
+  var autoplayTimer = null;
+  var AUTOPLAY_DELAY = 10000;
 
-  function tryNext() {
-    if (idx >= PHOTO_CANDIDATES.length) {
-      img.style.display = 'none'; // no photo found — hide the element
-      return;
-    }
-    img.src = PHOTO_CANDIDATES[idx];
-    idx++;
+  if (!GALLERY_PHOTOS.length) {
+    gallery.style.display = 'none';
+    return;
   }
 
-  img.addEventListener('error', tryNext);
-  img.addEventListener('load', function() {
-    img.style.opacity = '1';
+  function showPhoto(index) {
+    current = (index + GALLERY_PHOTOS.length) % GALLERY_PHOTOS.length;
+    photo.classList.remove('is-loaded');
+    photo.src = GALLERY_PHOTOS[current];
+    photo.alt = 'תמונת גלריה ' + (current + 1) + ' מתוך ' + GALLERY_PHOTOS.length;
+    lightboxPhoto.src = photo.src;
+    lightboxPhoto.alt = photo.alt;
+    dots.querySelectorAll('button').forEach(function(dot, dotIndex) {
+      dot.classList.toggle('active', dotIndex === current);
+      dot.setAttribute('aria-current', dotIndex === current ? 'true' : 'false');
+    });
+  }
+
+  function startAutoplay() {
+    clearInterval(autoplayTimer);
+    if (GALLERY_PHOTOS.length < 2 || document.hidden || lightbox.classList.contains('show')) return;
+    autoplayTimer = setInterval(function() { showPhoto(current + 1); }, AUTOPLAY_DELAY);
+  }
+
+  function selectPhoto(index) {
+    showPhoto(index);
+    startAutoplay();
+  }
+
+  GALLERY_PHOTOS.forEach(function(_, index) {
+    var dot = document.createElement('button');
+    dot.type = 'button';
+    dot.setAttribute('aria-label', 'הצג תמונה ' + (index + 1));
+    dot.addEventListener('click', function() { selectPhoto(index); });
+    dots.appendChild(dot);
   });
 
-  img.style.opacity = '0';
-  img.style.transition = 'opacity 0.5s ease';
-  tryNext();
+  if (GALLERY_PHOTOS.length < 2) {
+    gallery.classList.add('single-photo');
+    lightbox.classList.add('single-photo');
+  }
+  photo.addEventListener('load', function() { photo.classList.add('is-loaded'); });
+  photo.addEventListener('error', function() { gallery.classList.add('gallery-error'); });
+  prev.addEventListener('click', function() { selectPhoto(current - 1); });
+  next.addEventListener('click', function() { selectPhoto(current + 1); });
+  document.getElementById('gallery-stage').addEventListener('click', function() {
+    clearInterval(autoplayTimer);
+    lightbox.classList.add('show');
+    document.body.classList.add('lightbox-open');
+    document.getElementById('lightbox-close').focus();
+  });
+  document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+  document.getElementById('lightbox-prev').addEventListener('click', function() { showPhoto(current - 1); });
+  document.getElementById('lightbox-next').addEventListener('click', function() { showPhoto(current + 1); });
+  lightbox.addEventListener('click', function(event) {
+    if (event.target === lightbox) closeLightbox();
+  });
+  function beginSwipe(event) {
+    touchStartX = event.changedTouches[0].clientX;
+  }
+
+  function endSwipe(event) {
+    var distance = event.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(distance) > 45) selectPhoto(current + (distance > 0 ? -1 : 1));
+  }
+
+  gallery.addEventListener('touchstart', beginSwipe, { passive: true });
+  gallery.addEventListener('touchend', endSwipe, { passive: true });
+  lightbox.addEventListener('touchstart', beginSwipe, { passive: true });
+  lightbox.addEventListener('touchend', endSwipe, { passive: true });
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && lightbox.classList.contains('show')) closeLightbox();
+    if (GALLERY_PHOTOS.length < 2) return;
+    if (event.key === 'ArrowLeft') selectPhoto(current - 1);
+    if (event.key === 'ArrowRight') selectPhoto(current + 1);
+  });
+
+  function closeLightbox() {
+    lightbox.classList.remove('show');
+    document.body.classList.remove('lightbox-open');
+    startAutoplay();
+  }
+
+  showPhoto(0);
+  startAutoplay();
+  document.addEventListener('visibilitychange', startAutoplay);
 })();
 
 // === DARK MODE ===
@@ -388,6 +480,7 @@ function doSubmit() {
 
   if (!name)   { alert('אנא הזן/י שם מלא'); return; }
   if (!attend) { alert('אנא בחר/י האם תגיע/י'); return; }
+  if (!db) { alert('טופס אישור ההגעה אינו מוגדר בסביבה המקומית'); return; }
 
   var btn = document.getElementById('submit-btn');
   btn.textContent = 'שולח...';
@@ -467,6 +560,7 @@ function showDuplicateMsg(name) {
 
 // === BIT CLICK TRACKING ===
 function recordBitClick() {
+  if (!db) return;
   var name = document.getElementById('f-name').value.trim();
   db.collection('bit_clicks').add({
     name: name || '(unknown)',
@@ -493,6 +587,7 @@ function closeGiftModal() {
 function sendBlessing() {
   var text = document.getElementById('blessing-text').value.trim();
   if (!text) { alert('אנא כתוב/י ברכה קצרה לפני השליחה'); return; }
+  if (!db) { alert('שליחת ברכות אינה מוגדרת בסביבה המקומית'); return; }
 
   var btn = document.getElementById('send-blessing-btn');
   btn.textContent = 'שולח...';
